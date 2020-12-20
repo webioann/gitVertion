@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack');
 
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = process.env.NODE_ENV === 'production';
@@ -48,8 +49,37 @@ const filename = (ext) => isDev ? `[name].${ext}`: `[name].[contenthash].${ext}`
         }
       ]
     }),
-
     ];
+
+    if (isProd) {
+      basePlugins.push(
+        new ImageminPlugin({
+          bail: false, // Ignore errors on corrupted images
+          cache: true,
+          imageminOptions: {
+            // Before using imagemin plugins make sure you have added them in `package.json` (`devDependencies`) and installed them
+     
+            // Lossless optimization with custom option
+            // Feel free to experiment with options for better result for you
+            plugins: [
+              ["gifsicle", { interlaced: true }],
+              ["jpegtran", { progressive: true }],
+              ["optipng", { optimizationLevel: 5 }],
+              [
+                "svgo",
+                {
+                  plugins: [
+                    {
+                      removeViewBox: false
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        })
+      )
+    }
     return basePlugins;
   }
 
