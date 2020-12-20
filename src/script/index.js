@@ -1,6 +1,6 @@
 import "../scss/style.scss";
 
 
-console.log('Webpack is work,egen');
+console.log('babel is work');
 
 

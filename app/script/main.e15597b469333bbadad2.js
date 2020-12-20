@@ -1,0 +1,1 @@
+(()=>{"use strict";console.log("babel is work")})();
